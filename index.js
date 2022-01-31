@@ -38,11 +38,13 @@ app.get('/:phonenumber/:code', async (req, res) => {
     return res.json(response.data);
   } catch (err) {
     if (err.response) {
-      return res.json(err);
+      if (err.response.data) {
+        return res.status(err.response.status).json(err.response.data);
+      }
     }
     console.log(err);
 
-    return res.status(500).json({ status: false, message: 'เกิดข้อผิดพลาด! โปรดติดต่อเจ้าของร้านเพื่อแก้ไขปัญหา.' });
+    return res.status(500).json({ status: false, message: 'เกิดข้อผิดพลาด!' });
   }
 });
 
@@ -62,7 +64,7 @@ app.all('*', (req, res) => res.status(404).send());
 
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || 3001;
-var url = process.env.URL || 'http://localhost:3000';
+var url = process.env.URL || 'http://localhost:3001';
 
 app.listen(port, host, () => {
   console.log(`Listening on (${host}:${port})`, url);
